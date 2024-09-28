@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - 9200:9200
+    networks:
+      - elk
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
+    networks:
+      - elk
+
+  publisher-service:
+    build: ./publisher-service
+    container_name: publisher-service
+    ports:
+      - 3001:3001
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - elk
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3001/healthz"]
+      interval: 5s
+      timeout: 30s
+      retries: 3
+
+  logging-service:
+    build: ./logs-service
+    container_name: logging-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      elasticsearch:
+          condition: service_healthy
+      publisher-service:
+          condition: service_healthy
+    networks:
+      - elk
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+
+networks:
+  elk:
+    driver: bridge
