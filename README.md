@@ -8,7 +8,7 @@
 
 ## Description
 
-This project is a simple example of how to monitor logs in a microservices architecture. The logs-service is responsible for storing logs in the database (elasticsearch) and the publisher-service is responsible for publishing logs to RabbitMQ.
+This project is a simple example of how to store logs in centralized logging service in a microservices architecture. The logs-service is responsible for storing logs in the database (elasticsearch) and the publisher-service is responsible for publishing logs to RabbitMQ.
 
 ## Requirements
 
