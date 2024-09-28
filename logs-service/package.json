@@ -1,0 +1,35 @@
+{
+	"name": "logs-service",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.ts",
+	"scripts": {
+		"start:dev": "ts-node-dev --respawn --transpile-only ./src/log-consumer.ts",
+		"build": "tsc",
+		"start": "npm run build && node dist/log-consumer.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Adosh74/"
+	},
+	"author": "Mohamed Shebl",
+	"license": "ISC",
+	"dependencies": {
+		"@elastic/elasticsearch": "^8.15.0",
+		"@types/amqplib": "^0.10.5",
+		"amqplib": "^0.10.4"
+	},
+	"devDependencies": {
+		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
+		"@types/express": "^5.0.0",
+		"@typescript-eslint/eslint-plugin": "^8.7.0",
+		"@typescript-eslint/parser": "^8.7.0",
+		"eslint": "^9.11.1",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.2.1",
+		"prettier": "^3.3.3",
+		"ts-node": "^10.9.2",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.6.2"
+	}
+}
